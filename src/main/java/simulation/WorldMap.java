@@ -14,6 +14,6 @@ public class WorldMap extends AbstractWorldMap {
 
     @Override
     public void run() {
-        this.animal.move(MapDirection.values()[this.random.nextInt(MapDirection.values().length)], width, height);
+        this.animal.move(MapDirection.values()[this.random.nextInt(MapDirection.values().length)]);
     }
 }

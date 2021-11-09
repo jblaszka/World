@@ -7,18 +7,16 @@ import java.util.Random;
 public class World {
 
     private static final Random random = new Random();
-    private static final int WIDTH = 20, HEIGHT = 30;
 
     public static void main(String[] args) {
         System.out.println("Start");
-        Animal animal = new Animal(new Vector2D(random.nextInt(WIDTH), random.nextInt(HEIGHT)));
-        moveAnimal(animal);
+        Simulation.simulateDay();
         System.out.println("Stop");
     }
 
     private static void moveAnimal(Animal animal) {
         for (int i = 0; i < 10; i++) {
-            animal.move(MapDirection.values()[random.nextInt(MapDirection.values().length)], WIDTH, HEIGHT);
+            animal.move(MapDirection.values()[random.nextInt(MapDirection.values().length)]);
         }
     }
 
