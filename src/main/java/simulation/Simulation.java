@@ -14,5 +14,6 @@ public class Simulation {
 
     public static void simulateDay() {
         worldMap.run();
+        worldMap.eat();
     }
 }

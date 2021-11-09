@@ -1,9 +1,9 @@
 package simulation;
 
-public class plant {
+public class Plant {
     private final Vector2D position;
 
-    public plant(Vector2D position){
+    public Plant(Vector2D position){
         this.position = position;
     }
 
