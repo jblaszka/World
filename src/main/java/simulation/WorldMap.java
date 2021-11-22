@@ -7,13 +7,16 @@ public class WorldMap extends AbstractWorldMap {
     private Map<Vector2D, Plant> plants = new HashMap<>();
     private ArrayList<Animal> animals = new ArrayList<>();
     private Random random;
+    private static final int INITIAL_ENERGY = 22;
+    private int dayNumber = 1;
+    private int PLANT_ENERGY = 10;
 
 
     public WorldMap(int width, int height) {
         super(width, height);
         random = new Random();
         for (int i = 0; i < ANIMALS_ND; i++) {
-            Animal animal = new Animal(getRandomVector());
+            Animal animal = new Animal(getRandomVector(), INITIAL_ENERGY);
             animals.add(animal);
             placeAnimalOnMap(animal);
         }
@@ -23,13 +26,9 @@ public class WorldMap extends AbstractWorldMap {
     }
 
     private void placeAnimalOnMap(Animal animal){
-            List<Animal> animalsAtPositions = animalsPosition.get(animal.getPosition());
-            if (animalsAtPositions == null){
-                animalsAtPositions = new LinkedList<>();
-                animalsPosition.put(animal.getPosition(), animalsAtPositions);
-            }
-            animalsAtPositions.add(animal);
-        }
+        animalsPosition.computeIfAbsent(animal.getPosition(), pos -> new LinkedList<>()).add(animal);
+    }
+
 
 
     private Plant getPlantAtPosition(Vector2D position) {
@@ -37,25 +36,26 @@ public class WorldMap extends AbstractWorldMap {
     }
 
     public void eat() {
-        for (Animal animal : animals) {
+        animals.forEach(animal -> {
             if (PositionIsOccupied(animal.getPosition())){
-                plants.remove(animal.getPosition());
-                System.out.println("Animal ate plant at position " + animal.getPosition());
-                addNewPlant();
 
+            System.out.println("Animal ate plant at position " + animal.getPosition());
+            animal.setEnergy(animal.getEnergy() + PLANT_ENERGY);
+            plants.remove(animal.getPosition());
+            addNewPlant();
             }
-        }
+        });
     }
 
 
     @Override
     public void run() {
+        System.out.println("Today is day number " + dayNumber);
         animalsPosition.clear();
-        for (Animal animal : animals) {
-            animal.move(MapDirection.values()[random.nextInt(MapDirection.values().length)]);
-            placeAnimalOnMap(animal);
+        animals.forEach(animal -> {            animal.move(MapDirection.values()[random.nextInt(MapDirection.values().length)]);
+            placeAnimalOnMap(animal);});
         }
-    }
+
 
     private Vector2D getRandomVector() {
         return new Vector2D(random.nextInt(getWidth()), random.nextInt(getHeight()));
@@ -70,5 +70,7 @@ public class WorldMap extends AbstractWorldMap {
 
     public boolean PositionIsOccupied(Vector2D position) {
         return getPlantAtPosition(position) != null;
+
     }
+
 }
