@@ -1,17 +1,22 @@
 package simulation;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import java.util.Random;
 
 public class World {
 
+    private static final int DAYS_NUMBER = 8;
+
     private static final Random random = new Random();
 
     public static void main(String[] args) {
         System.out.println("Start");
-        Simulation.simulateDay();
+        for(int i = 0; i < DAYS_NUMBER; i++){
+            Simulation.simulateDay();}
         System.out.println("Stop");
+
     }
 
     private static void moveAnimal(Animal animal) {
