@@ -1,13 +1,16 @@
 package simulation;
 import java.util.*;
+import java.util.stream.Collectors;
 
-public class WorldMap extends AbstractWorldMap {
+public class WorldMap extends AbstractWorldMap{
     private static final int ANIMALS_ND = 15, PLANTS_NUMBER = 100;
+
     private Map<Vector2D, List<Animal>> animalsPosition = new HashMap<>();
     private Map<Vector2D, Plant> plants = new HashMap<>();
-    private ArrayList<Animal> animals = new ArrayList<>();
+    private List<Animal> animals = new ArrayList<>();
+
     private Random random;
-    private static final int INITIAL_ENERGY = 22;
+    private static final int ANIMAL_ENERGY = 22;
     private int dayNumber = 1;
     private int PLANT_ENERGY = 10;
 
@@ -16,9 +19,7 @@ public class WorldMap extends AbstractWorldMap {
         super(width, height);
         random = new Random();
         for (int i = 0; i < ANIMALS_ND; i++) {
-            Animal animal = new Animal(getRandomVector(), INITIAL_ENERGY);
-            animals.add(animal);
-            placeAnimalOnMap(animal);
+            addNewAnimal(new Animal(getRandomVector(), ANIMAL_ENERGY));
         }
         for (int i = 0; i < PLANTS_NUMBER; i++) {
             addNewPlant();
@@ -36,23 +37,26 @@ public class WorldMap extends AbstractWorldMap {
     }
 
     public void eat() {
-        animals.forEach(animal -> {
-            if (PositionIsOccupied(animal.getPosition())){
-
-            System.out.println("Animal ate plant at position " + animal.getPosition());
-            animal.setEnergy(animal.getEnergy() + PLANT_ENERGY);
-            plants.remove(animal.getPosition());
-            addNewPlant();
+        animalsPosition.forEach((position, animals) -> {
+            if (PositionIsOccupied(position)) {
+                animals.stream().max(Animal :: compareTo).ifPresent(this::eatPlant);
             }
         });
     }
 
+    private void eatPlant(Animal animal){
+        System.out.println("Animal ate plant at position " + animal.getPosition());
+        animal.setEnergy(animal.getEnergy() + PLANT_ENERGY);
+        plants.remove(animal.getPosition());
+        addNewPlant();
+    }
 
     @Override
     public void run() {
         System.out.println("Today is day number " + dayNumber);
         animalsPosition.clear();
-        animals.forEach(animal -> {            animal.move(MapDirection.values()[random.nextInt(MapDirection.values().length)]);
+        animals.forEach(animal -> {
+            animal.move(MapDirection.values()[random.nextInt(MapDirection.values().length)]);
             placeAnimalOnMap(animal);});
         }
 
@@ -73,4 +77,36 @@ public class WorldMap extends AbstractWorldMap {
 
     }
 
-}
+    @Override
+
+
+    public void atTheEndOfDay() {
+        animals = animals.stream()
+                .map(Animal::aging)
+                .map(animal -> animal.setEnergy(animal.getEnergy() - (ANIMAL_ENERGY / 2)))
+                .collect(Collectors.toList());
+        this.dayNumber++;
+    }
+
+    @Override
+    public void reproduce(){
+        List<Animal> children = new LinkedList<>();
+        animalsPosition.forEach((position, animals) -> {
+            List<Animal> parents = animals.stream()
+                    .filter(a -> a.getEnergy() > ANIMAL_ENERGY / 2)
+                    .sorted(Collections.reverseOrder())
+                    .limit(2)
+                    .collect(Collectors.toList());
+            if (parents.size() == 2){
+                Animal child = new Animal(parents.get(0), parents.get(1));
+                System.out.println("Animal " + child.getAnimalId() + " was born on position " + position);
+                children.add(child);
+            }
+            children.forEach(this::addNewAnimal );
+        });
+    }
+    private void addNewAnimal(Animal animal){
+        animals.add(animal);
+        placeAnimalOnMap(animal);
+    }
+    }
