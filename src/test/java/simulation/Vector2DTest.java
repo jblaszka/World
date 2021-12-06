@@ -83,6 +83,6 @@ class Vector2DTest {
 	@ValueSource(ints = {3, 4, 5, 8, 14})
 	void shouldCreateVectorsWithParametrizedX(int expectedX) {
 		Vector2D vector2D = new Vector2D(expectedX, 1);
-		assertEquals(expectedX, vector2D.getX());
+		assertEquals(expectedX, vector2D.x());
 	}
 }

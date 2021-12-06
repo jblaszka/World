@@ -1,13 +1,15 @@
 package simulation;
 
 public class Simulation {
-    private static final int HEIGHT = 20, WIDTH = 30;
-    private static final IWorldMap worldMap;
 
-    static {
-        worldMap = new WorldMap(WIDTH, HEIGHT);
-    }
-
+    private static final WorldMap worldMap = new WorldMap(
+            SimulationParams.getField("width"),
+            SimulationParams.getField("height"),
+            SimulationParams.getField("noOfAnimals"),
+            SimulationParams.getField("noOfPlants"),
+            SimulationParams.getField("animalEnergy"),
+            SimulationParams.getField("plantEnergy")
+    );
     public static IWorldMap getWorldMap() {
         return worldMap;
     }
@@ -15,6 +17,7 @@ public class Simulation {
     public static void simulateDay() {
         worldMap.run();
         worldMap.eat();
+        worldMap.reproduce();
         worldMap.atTheEndOfDay();
     }
 }
