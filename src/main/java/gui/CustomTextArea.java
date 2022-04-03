@@ -27,7 +27,7 @@ public class CustomTextArea  extends JTextArea  {
                 0
         );
         Border border = BorderFactory.createLineBorder(CustomColors.BORDER_COLOR,2);
-        setBorder(new CompoundBorder(margins, border));
+        setBorder(new CompoundBorder(border,margins));
         constraints.gridx = col;
         constraints.gridy = row;
         constraints.gridwidth = AREA_WIDTH;

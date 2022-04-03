@@ -48,7 +48,7 @@ public class CustomTextField extends JFormattedTextField {
     setBackground(CustomColors.BACKGROUND_COLOR);
     Border margins = BorderFactory.createEmptyBorder(5,5,5,0);
     Border border = BorderFactory.createLineBorder(CustomColors.BORDER_COLOR,2);
-    setBorder(new CompoundBorder(margins, border));
+    setBorder(new CompoundBorder( border,margins));
 
     constraints.gridx = col + 1;
     constraints.fill = GridBagConstraints.HORIZONTAL;

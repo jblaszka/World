@@ -5,15 +5,16 @@ import java.util.stream.IntStream;
 
 public class WorldMap extends AbstractWorldMap{
     private int dayNumber = 1;
+    private int animalEnergy = 0;
+    private int plantEnergy = 0;
+    private int noOfPlants = 0;
 
     private Map<Vector2D, List<Animal>> animalsPositions = new HashMap<>();
     private Map<Vector2D, Plant> plants = new HashMap<>();
     private List<Animal> animals = new ArrayList<>();
 
     private final Random random = new Random();
-    private int animalEnergy;
-    private int plantEnergy;
-    private int noOfPlants;
+
     //private static final String statsFile = "stats.json";
     private SimulationStatistics statistics = null;
 
@@ -23,11 +24,9 @@ public class WorldMap extends AbstractWorldMap{
     }
 
     public void setSimulation(){
-        this.width = SimulationParams.getField("width");
-        this.height = SimulationParams.getField("height");
         this.animalEnergy = SimulationParams.getField("animalEnergy");
         this.plantEnergy = SimulationParams.getField("plantEnergy");
-        this.noOfPlants = SimulationParams.getField("noOfPlants");
+        this.noOfPlants = Math.min(SimulationParams.getField("noOfPlants"), getHeight() * getWidth());
 
         animals.clear();
         plants.clear();
@@ -150,7 +149,6 @@ public class WorldMap extends AbstractWorldMap{
             animals.stream().mapToInt(Animal::getEnergy).average().orElse(0),
             animals.size(),
             plants.size());
-        //System.out.println(statistics);
     }
 
     public SimulationStatistics getStatistics() {

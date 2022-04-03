@@ -33,14 +33,19 @@ public class MainPanel extends JPanel implements ActionListener {
         CustomButton continueBtn = createButton("Continue game");
         continueBtn.addActionListener((ActionEvent e) -> continueApp());
         CustomButton dumpToJsonBtn = createButton("Dump stats to JSON");
+        dumpToJsonBtn.addActionListener((ActionEvent e) -> dumpStatictics());
+
+
+
         SimulationParams.getParamsMap().forEach((fieldName, value) ->
                 new CustomTextField(fieldName, value, nextRow++, DEAFAULT_COLUMN, constraints, this));
+
         statsInput = new CustomTextArea(
                 "Press 'start new game'\nto reset game",
                 nextRow++,
                 DEAFAULT_COLUMN,
-                LayoutConstants.TEXT_AREA_HEIGHT,
                 LayoutConstants.TEXT_AREA_WIDTH,
+                LayoutConstants.TEXT_AREA_HEIGHT,
                 constraints,
                 this
         );
@@ -51,7 +56,7 @@ public class MainPanel extends JPanel implements ActionListener {
     }
 
     private void startApp(){
-        if( timer.isRunning()) timer.stop();
+        if(timer.isRunning()) timer.stop();
         Simulation.setSimulation();
         mapPanel.repaint();
         timer.start();
@@ -74,6 +79,7 @@ public class MainPanel extends JPanel implements ActionListener {
         }
         Simulation.simulateDay();
         mapPanel.repaint();
+        statsInput.setText(Simulation.getWorldMap().getStatistics().toString());
     }
 
     private void initLayout(){
