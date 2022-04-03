@@ -14,7 +14,6 @@ public class MapPanel extends JPanel {
         this.map = map;
     }
 
-
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
@@ -26,10 +25,13 @@ public class MapPanel extends JPanel {
 
     private void setupLayout(Graphics graphics) {
         graphics.setColor(CustomColors.BACKGROUND_COLOR);
-        graphics.fillRect(0,0, getWidth(), getHeight());
+        graphics.fillRect(0, 0, getWidth(), getHeight());
         graphics.setColor(CustomColors.MAP_BACKGROUND_COLOR);
-        graphics.fillRect(0,0, map.getWidth()* LayoutConstants.MAP_SCALE,
-                map.getHeight()* LayoutConstants.MAP_SCALE);
+        graphics.fillRect(
+                0, 0,
+                map.getWidth() * LayoutConstants.MAP_SCALE,
+                map.getHeight() * LayoutConstants.MAP_SCALE
+        );
     }
 
     private void drawPlants(Graphics graphics) {

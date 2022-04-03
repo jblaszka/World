@@ -20,6 +20,7 @@ public class CustomButton extends JButton {
         constraints.gridx = col;
         constraints.gridwidth = DEAFULT_WIDTH;
         constraints.gridheight = DEAFULT_HEIGH;
+        constraints.fill = GridBagConstraints.HORIZONTAL;
         setEnabled(enabled);
         panel.add(this, constraints);
     }

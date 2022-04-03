@@ -14,15 +14,25 @@ public class WorldMap extends AbstractWorldMap{
     private int animalEnergy;
     private int plantEnergy;
     private int noOfPlants;
-    private static final String statsFile = "stats.json";
+    //private static final String statsFile = "stats.json";
+    private SimulationStatistics statistics = null;
 
 
-    public WorldMap(int width, int height, int noOfAnimals, int noOfPlants, int animalEnergy, int plantEnergy) {
-        super(width, height);
-        this.animalEnergy = animalEnergy;
-        this.plantEnergy = plantEnergy;
-        this.noOfPlants = noOfPlants;
-        for (int i = 0; i < noOfAnimals; i++) {
+    public WorldMap() {
+        super(SimulationParams.getField("width"), SimulationParams.getField("height"));
+    }
+
+    public void setSimulation(){
+        this.width = SimulationParams.getField("width");
+        this.height = SimulationParams.getField("height");
+        this.animalEnergy = SimulationParams.getField("animalEnergy");
+        this.plantEnergy = SimulationParams.getField("plantEnergy");
+        this.noOfPlants = SimulationParams.getField("noOfPlants");
+
+        animals.clear();
+        plants.clear();
+
+        for (int i = 0; i < SimulationParams.getField("noOfAnimals"); i++) {
             addNewAnimal(new Animal(getRandomVector(), animalEnergy));
         }
         for (int i = 0; i < noOfPlants; i++) {
@@ -133,16 +143,20 @@ public class WorldMap extends AbstractWorldMap{
     }
 
     private void createStatisctic(){
-        SimulationStatistics statistics = new SimulationStatistics(
+        statistics = new SimulationStatistics(
             dayNumber,
             animals.stream().mapToInt(Animal::getAge).average().orElse(0),
             animals.stream().mapToInt(Animal::getNumberOfChildren).average().orElse(0),
             animals.stream().mapToInt(Animal::getEnergy).average().orElse(0),
             animals.size(),
             plants.size());
-        System.out.println(statistics);
-        JsonParser.dumpStatisticToJsonFile(statsFile, statistics);
+        //System.out.println(statistics);
     }
+
+    public SimulationStatistics getStatistics() {
+        return statistics;
+    }
+
     @Override
     public Map<Vector2D, List<Animal>> getAnimalsLocations(){
         return animalsPositions;

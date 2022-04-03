@@ -11,6 +11,7 @@ public interface IWorldMap {
     void eat();
     void atTheEndOfDay();
     void reproduce();
+    SimulationStatistics getStatistics();
     Map<Vector2D, List<Animal>> getAnimalsLocations();
     Map<Vector2D, Plant> getPlantsLocations();
 }
