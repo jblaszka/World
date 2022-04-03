@@ -1,6 +1,4 @@
 package simulation;
-import java.io.File;
-import java.io.Writer;
 import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -61,8 +59,11 @@ public class WorldMap extends AbstractWorldMap{
                 animals.stream().max(Animal :: compareTo).ifPresent(this::eatPlant);
             }
         });
-        IntStream.range(1,new Random().nextInt(noOfPlants/10)+1).forEach(i -> placePlantOnMap());
-    }
+        IntStream.range(1,new Random().nextInt(noOfPlants/10)+1).forEach(i -> {
+            if (plants.size() < getHeight() * getWidth()) placePlantOnMap();
+        });
+        }
+
 
     private void eatPlant(Animal animal){
         System.out.println("Animal ate plant at position " + animal.getPosition());
@@ -141,5 +142,14 @@ public class WorldMap extends AbstractWorldMap{
             plants.size());
         System.out.println(statistics);
         JsonParser.dumpStatisticToJsonFile(statsFile, statistics);
+    }
+    @Override
+    public Map<Vector2D, List<Animal>> getAnimalsLocations(){
+        return animalsPositions;
+    }
+
+    @Override
+    public Map<Vector2D, Plant> getPlantsLocations(){
+        return plants;
     }
     }
