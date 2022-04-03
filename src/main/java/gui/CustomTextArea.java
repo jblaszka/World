@@ -8,6 +8,7 @@ import java.awt.*;
 public class CustomTextArea  extends JTextArea  {
     private static final int AREA_WIDTH = 2;
     private static final int AREA_HEIGHT = 1;
+
     public CustomTextArea(
         String text,
         int row,
